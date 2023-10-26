@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/jwoglom/macos-findmy-mqtt/internal/loop"
+	"github.com/jwoglom/macos-findmy-mqtt/internal/mqttconn"
 )
 
 var broker = flag.String("broker", "", "The broker URI. ex: tcp://10.10.1.1:1883")
@@ -34,6 +36,10 @@ func main() {
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
+
+	conn := mqttconn.NewMqttConn(client, byte(*qos), false)
+
+	loop.MainLoop(conn)
 
 	defer client.Disconnect(1000)
 }

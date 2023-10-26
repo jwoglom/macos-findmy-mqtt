@@ -11,6 +11,7 @@ type FmItem struct {
 	ProductIdentifier    string            `json:"productIdentifier"`
 	SerialNumber         string            `json:"serialNumber"`
 	SystemVersion        string            `json:"systemVersion"`
+	Role                 FmItemRole        `json:"role"`
 	PartInfo             FmItemPartInfo    `json:"partInfo"`
 }
 
@@ -40,4 +41,8 @@ type FmItemLocation struct {
 type FmItemPartInfo struct {
 	Type string `json:"type"`
 	Name string `json:"name"`
+}
+
+type FmItemRole struct {
+	Emoji string `json:"string"`
 }
