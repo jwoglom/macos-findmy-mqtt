@@ -1,18 +1,19 @@
 package fmipcore
 
 type FmItem struct {
-	Name                 string            `json:"name"`
-	Address              FmItemAddress     `json:"address"`
-	ProductType          FmItemProductType `json:"productType"`
-	Location             FmItemLocation    `json:"location"`
-	CrowdSourcedLocation FmItemLocation    `json:"crowdSourcedLocation"`
-	Identifier           string            `json:"identifier"`
-	GroupIdentifier      string            `json:"groupIdentifier"`
-	ProductIdentifier    string            `json:"productIdentifier"`
-	SerialNumber         string            `json:"serialNumber"`
-	SystemVersion        string            `json:"systemVersion"`
-	Role                 FmItemRole        `json:"role"`
-	PartInfo             FmItemPartInfo    `json:"partInfo"`
+	Name                 string               `json:"name"`
+	Address              FmItemAddress        `json:"address"`
+	ProductType          FmItemProductType    `json:"productType"`
+	Location             FmItemLocation       `json:"location"`
+	CrowdSourcedLocation FmItemLocation       `json:"crowdSourcedLocation"`
+	SafeLocations        []FmItemSafeLocation `json:"safeLocations"`
+	Identifier           string               `json:"identifier"`
+	GroupIdentifier      string               `json:"groupIdentifier"`
+	ProductIdentifier    string               `json:"productIdentifier"`
+	SerialNumber         string               `json:"serialNumber"`
+	SystemVersion        string               `json:"systemVersion"`
+	Role                 FmItemRole           `json:"role"`
+	PartInfo             FmItemPartInfo       `json:"partInfo"`
 }
 
 type FmItemAddress struct {
@@ -26,6 +27,10 @@ type FmItemProductType struct {
 	Type               string                `json:"type"`
 }
 
+func (t FmItem) IsAirTag() bool {
+	return t.ProductType.Type == "b389"
+}
+
 type FmItemProductTypeInfo struct {
 	ModelName string `json:"modelName"`
 }
@@ -36,6 +41,12 @@ type FmItemLocation struct {
 	Timestamp    int64   `json:"timeStamp"`
 	IsInaccurate bool    `json:"isInaccurate"`
 	IsOld        bool    `json:"isOld"`
+}
+
+type FmItemSafeLocation struct {
+	Name     string         `json:"name"`
+	Location FmItemLocation `json:"location"`
+	Address  FmItemAddress  `json:"address"`
 }
 
 type FmItemPartInfo struct {

@@ -22,6 +22,7 @@ func NewMqttConn(client mqtt.Client, qos byte, retained bool) *MqttConn {
 }
 
 func (c *MqttConn) PublishString(topic, value string) error {
+	fmt.Printf("publish: %s = %s\n", topic, value)
 	token := c.client.Publish(topic, c.qos, c.retained, value)
 	if !token.Wait() {
 		return fmt.Errorf("unable to publish message topic=%s value=%#v", topic, value)

@@ -39,7 +39,10 @@ func main() {
 
 	conn := mqttconn.NewMqttConn(client, byte(*qos), false)
 
-	loop.MainLoop(conn)
+	err := loop.MainLoop(conn)
+	if err != nil {
+		panic(err)
+	}
 
 	defer client.Disconnect(1000)
 }
