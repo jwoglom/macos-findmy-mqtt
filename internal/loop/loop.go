@@ -9,7 +9,7 @@ import (
 	"github.com/jwoglom/macos-findmy-mqtt/internal/mqttconn"
 )
 
-func MainLoop(conn *mqttconn.MqttConn) error {
+func MainLoop(conn *mqttconn.MqttConn, freq int) error {
 	homeassistant.UpdateConnectivity(conn)
 	homeassistant.UpdateOnline(conn)
 
@@ -24,7 +24,10 @@ func MainLoop(conn *mqttconn.MqttConn) error {
 			homeassistant.UpdateItem(conn, item)
 		}
 
-		fmt.Println("sleeping for 60 seconds")
-		time.Sleep(60 * time.Second)
+		if freq == 0 {
+			return nil
+		}
+		fmt.Printf("sleeping for %d seconds\n", freq)
+		time.Sleep(time.Duration(freq) * time.Second)
 	}
 }

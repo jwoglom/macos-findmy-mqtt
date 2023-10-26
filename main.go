@@ -14,6 +14,7 @@ var user = flag.String("user", "", "The User (optional)")
 var password = flag.String("password", "", "The password (optional)")
 var id = flag.String("id", "testgoid", "The ClientID (optional)")
 var qos = flag.Int("qos", 0, "The Quality of Service 0,1,2 (default 0)")
+var freq = flag.Int("freq", 60, "The number of seconds between MQTT pushes")
 
 func buildOpts() *mqtt.ClientOptions {
 	opts := mqtt.NewClientOptions()
@@ -39,7 +40,7 @@ func main() {
 
 	conn := mqttconn.NewMqttConn(client, byte(*qos), false)
 
-	err := loop.MainLoop(conn)
+	err := loop.MainLoop(conn, *freq)
 	if err != nil {
 		panic(err)
 	}
