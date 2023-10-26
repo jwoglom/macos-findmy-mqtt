@@ -10,12 +10,10 @@ import (
 )
 
 func MainLoop(conn *mqttconn.MqttConn, freq int) error {
-	homeassistant.UpdateConnectivity(conn)
-	homeassistant.UpdateOnline(conn)
-
-	fmt.Println("Published online status")
-
 	for {
+		homeassistant.UpdateConnectivity(conn)
+		homeassistant.UpdateOnline(conn)
+
 		items, err := fmipcore.ReadItems()
 		if err != nil {
 			return err
