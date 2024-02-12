@@ -17,10 +17,17 @@ func UpdateItem(conn *mqttconn.MqttConn, item fmipcore.FmItem) error {
 
 	fmt.Printf("Found item %s (%s)\n", name, item.Identifier)
 
+	var group *fmipcore.FmItemGroup
 	if item.GroupIdentifier != "" {
-		// skip for now
-		fmt.Println("skipping airpods")
-		return nil
+		// find the base group object name
+		group, _ = fmipcore.GetItemGroup(item.GroupIdentifier)
+		if group == nil {
+			fmt.Printf("unable to find group %s, so skipping object\n", item.GroupIdentifier)
+			return nil
+		}
+
+		// prepend name of the group (e.g. Left Bud -> AirPods Left Bud)
+		name = group.Name + " - " + name
 	}
 
 	config := map[string]string{
@@ -54,6 +61,11 @@ func UpdateItem(conn *mqttconn.MqttConn, item fmipcore.FmItem) error {
 		"last_updated":   fmt.Sprintf("%d", item.Location.Timestamp),
 		"serial_number":  item.SerialNumber,
 		"system_version": item.SystemVersion,
+	}
+
+	if group != nil {
+		attrs["group_name"] = group.Name
+		attrs["pairing_state"] = group.PairingState(item.Identifier)
 	}
 
 	err = conn.PublishJson(ItemAttributesTopic(item), attrs)
