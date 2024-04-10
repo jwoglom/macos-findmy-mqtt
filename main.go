@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os/exec"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -18,6 +19,7 @@ var id = flag.String("id", "testgoid", "The ClientID (optional)")
 var qos = flag.Int("qos", 0, "The Quality of Service 0,1,2 (default 0)")
 var freq = flag.Int("freq", 30, "The number of seconds between MQTT pushes")
 var httpPort = flag.Int("httpPort", 8080, "http port for webserver")
+var openApp = flag.Bool("openApp", true, "whether to open the Find My MacOS app if not detected running")
 
 func buildOpts() *mqtt.ClientOptions {
 	opts := mqtt.NewClientOptions()
@@ -33,7 +35,25 @@ func strPtr(s string) *string {
 	return &s
 }
 
+func findMyAppOpen() bool {
+	cmd := exec.Command("sh", "-c", "ps aux | grep '[F]indMy.app'")
+	if _, err := cmd.CombinedOutput(); err != nil {
+		_, ok := err.(*exec.ExitError)
+		return !ok
+	}
+	return true
+}
+
 func runMqtt() {
+
+	if *openApp {
+		if !findMyAppOpen() {
+			fmt.Println("Opening FindMy.app")
+			exec.Command("open", "/System/Applications/FindMy.app").Start()
+		} else {
+			fmt.Println("FindMy.app is already running")
+		}
+	}
 
 	if *broker == "" {
 		fmt.Println("no broker provided, only running webserver")
