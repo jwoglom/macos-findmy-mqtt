@@ -8,25 +8,29 @@ import (
 
 var topic = flag.String("topic", "findmy-mqtt", "MQTT default topic name")
 
-var BaseMqttTopic string
-var ConnectivityTopic string
-var StatusTopic string
-var BaseDeviceTrackerTopic string
+func BaseMqttTopic() string {
+	return *topic
+}
 
-func init() {
-	BaseMqttTopic = *topic
-	ConnectivityTopic = "homeassistant/binary_sensor/" + BaseMqttTopic + "/connectivity/config"
-	StatusTopic = BaseMqttTopic + "/status"
-	BaseDeviceTrackerTopic = "homeassistant/device_tracker/"
+func ConnectivityTopic() string {
+	return "homeassistant/binary_sensor/" + BaseMqttTopic() + "/connectivity/config"
+}
+
+func StatusTopic() string {
+	return BaseMqttTopic() + "/status"
+}
+
+func BaseDeviceTrackerTopic() string {
+	return "homeassistant/device_tracker/"
 }
 
 func ItemConfigTopic(item fmipcore.FmItem) string {
-	return BaseDeviceTrackerTopic + BaseMqttTopic + "_" + item.Identifier + "/config"
+	return BaseDeviceTrackerTopic() + BaseMqttTopic() + "_" + item.Identifier + "/config"
 }
 
 func ItemStateTopic(item fmipcore.FmItem) string {
-	return BaseMqttTopic + "/" + item.Identifier + "/state"
+	return BaseMqttTopic() + "/" + item.Identifier + "/state"
 }
 func ItemAttributesTopic(item fmipcore.FmItem) string {
-	return BaseMqttTopic + "/" + item.Identifier + "/attributes"
+	return BaseMqttTopic() + "/" + item.Identifier + "/attributes"
 }

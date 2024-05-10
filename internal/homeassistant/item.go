@@ -34,7 +34,7 @@ func UpdateItem(conn *mqttconn.MqttConn, item fmipcore.FmItem) error {
 		"state_topic":           ItemStateTopic(item),
 		"json_attributes_topic": ItemAttributesTopic(item),
 		"name":                  name,
-		"unique_id":             BaseMqttTopic + "_" + item.Identifier,
+		"unique_id":             BaseMqttTopic() + "_" + item.Identifier,
 	}
 
 	err := conn.PublishJson(ItemConfigTopic(item), config)

@@ -77,11 +77,9 @@ func runMqtt() {
 	defer client.Disconnect(1000)
 }
 
-func init() {
-	flag.Parse()
-}
-
 func main() {
+	flag.Parse()
+
 	go httpserver.Run(*httpPort)
 
 	runMqtt()
